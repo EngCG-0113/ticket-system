@@ -31,7 +31,7 @@
 
             <!-- Page Content -->
             <main>
-                <div id="app">
+                <div id="app" style="margin-top: 5px;">
                     {{ $slot }}
                 </div>
             </main>
