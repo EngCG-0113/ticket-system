@@ -15,13 +15,12 @@ class TicketController extends Controller
     {
         $query = (new Ticket)->newQuery();
         $params = $request->all();
+        $search = $params['search'];
 
-        try{
-            foreach ($params as $param => $value) {
-                $query->where($params,$value);
-            }
-        }catch(QueryException $e){
-            return response()->json(['error' => $e->getMessage()]);
+        if($params['search']){
+            $query->where('issue_headline', 'like',"%{$search}%")
+                ->orWhere('issue_description', 'like',"%{$search}%")
+                ->orWhere('requested_by', 'like',"%{$search}%");
         }
 
         $tickets = $query->paginate(10);
@@ -42,6 +41,16 @@ class TicketController extends Controller
 
     public function update(Request $request,$id)
     {
+        $ticket = Ticket::find($id);
+
+        if($ticket){
+            $ticket->status = $ticket->status == 'open' ? 'closed' : 'open';
+            $ticket->save();
+            return response()->json($ticket);
+        }else{
+            return response()->json(['error' => 'Ticket ID not found.'],500);
+        }
         return new TicketResource(Ticket::find($id));
     }
+
 }
