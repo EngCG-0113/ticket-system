@@ -1,6 +1,4 @@
 <?php
-
-use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -14,14 +12,20 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+const CONTROLLER = 'App\\Http\\Controllers\\';
+
 Route::get('/', function () {
     return view('dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::middleware('auth')->group(function () {
-    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
-    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
-    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+    Route::get('/profile', [CONTROLLER.ProfileController::class, 'edit'])->name('profile.edit');
+    Route::patch('/profile', [CONTROLLER.ProfileController::class, 'update'])->name('profile.update');
+    Route::delete('/profile', [CONTROLLER.ProfileController::class, 'destroy'])->name('profile.destroy');
+
+    Route::prefix('tickets')->group(function() {
+        Route::get('/', [CONTROLLER.TicketController::class, 'index'])->name('ticket.index');
+    });
 });
 
 require __DIR__.'/auth.php';
