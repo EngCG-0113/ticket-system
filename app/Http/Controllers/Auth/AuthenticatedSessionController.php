@@ -28,7 +28,11 @@ class AuthenticatedSessionController extends Controller
         $request->authenticate();
 
         $request->session()->regenerate();
+        $user = Auth::user();
 
+        $token = $user->createToken('web-token')->plainTextToken;
+        \Cache::put('api-token-'.$user->id,$token);
+        setcookie('api-token',$token);
         return redirect()->intended(RouteServiceProvider::HOME);
     }
 
@@ -37,7 +41,14 @@ class AuthenticatedSessionController extends Controller
      */
     public function destroy(Request $request): RedirectResponse
     {
+        //remove token
+        $user = Auth::user();
+        $user->tokens()->where('name','web-token')->delete();
+        \Cache::forget('api-token-'.$user->id);
+        setcookie("api-token", "", time()-3600);
+
         Auth::guard('web')->logout();
+
 
         $request->session()->invalidate();
 
