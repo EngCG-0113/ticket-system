@@ -1,3 +1,3 @@
 <x-app-layout>
-    <ticket-list/>
+    <ticket-add/>
 </x-app-layout>

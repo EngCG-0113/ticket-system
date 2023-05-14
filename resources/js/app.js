@@ -6,6 +6,9 @@
 
 import './bootstrap';
 import { createApp } from 'vue';
+import Datepicker from 'vuejs-datepicker';
+import VueDatePicker from '@vuepic/vue-datepicker';
+import '@vuepic/vue-datepicker/dist/main.css'
 
 /**
  * Next, we will create a fresh Vue application instance. You may then begin
@@ -17,8 +20,11 @@ const app = createApp({});
 
 import ExampleComponent from './components/ExampleComponent.vue';
 import TicketList from './components/ticket/List.vue';
+import TicketAdd from './components/ticket/Add.vue';
 app.component('example-component', ExampleComponent);
 app.component('ticket-list', TicketList);
+app.component('ticket-add', TicketAdd);
+app.component('VueDatePicker', VueDatePicker);
 
 /**
  * The following block of code may be used to automatically register your

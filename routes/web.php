@@ -25,6 +25,7 @@ Route::middleware('auth')->group(function () {
 
     Route::prefix('tickets')->group(function() {
         Route::get('/', [CONTROLLER.TicketController::class, 'index'])->name('ticket.index');
+        Route::get('/add', [CONTROLLER.TicketController::class, 'create'])->name('ticket.index');
     });
 });
 

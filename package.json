@@ -23,6 +23,8 @@
         "vue-loader": "^17.0.1"
     },
     "dependencies": {
-        "vue": "^3.2.36"
+        "@vuepic/vue-datepicker": "^5.1.0",
+        "vue": "^3.2.36",
+        "vuejs-datepicker": "^1.6.2"
     }
 }

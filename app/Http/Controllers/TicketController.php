@@ -10,11 +10,12 @@ use Illuminate\View\View;
 
 class TicketController extends Controller
 {
-    /**
-     * Display the user's profile form.
-     */
     public function index(Request $request): View
     {
         return view('ticket.index');
+    }
+    public function create(Request $request): View
+    {
+        return view('ticket.create');
     }
 }

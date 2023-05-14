@@ -8,6 +8,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Resources\V1\TicketResource;
 use App\Http\Resources\V1\TicketCollection;
 use App\Models\Ticket;
+use Carbon\Carbon;
 
 class TicketController extends Controller
 {
@@ -36,7 +37,13 @@ class TicketController extends Controller
 
     public function store(Request $request)
     {
-        return new TicketResource(Ticket::find($id));
+        $data = $request->all();
+        $data['requested_date'] = Carbon::parse($data['requested_date'])->toDateTimeString();
+
+        $ticket = Ticket::create($data);
+
+
+        return response()->json($ticket);
     }
 
     public function update(Request $request,$id)
