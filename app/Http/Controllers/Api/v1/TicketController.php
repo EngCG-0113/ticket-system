@@ -14,17 +14,21 @@ class TicketController extends Controller
 {
     public function index(Request $request)
     {
-        $query = (new Ticket)->newQuery();
-        $params = $request->all();
+        try{
+            $query = (new Ticket)->newQuery();
+            $params = $request->all();
 
-        if(isset($params['search'])){
-            $search = $params['search'];
-            $query->where('issue_headline', 'like',"%{$search}%")
-                ->orWhere('issue_description', 'like',"%{$search}%")
-                ->orWhere('requested_by', 'like',"%{$search}%");
+            if(isset($params['search'])){
+                $search = $params['search'];
+                $query->where('issue_headline', 'like',"%{$search}%")
+                    ->orWhere('issue_description', 'like',"%{$search}%")
+                    ->orWhere('requested_by', 'like',"%{$search}%");
+            }
+
+            $tickets = $query->paginate(10);
+        }catch(\Exceptions $e){
+            return response()->json(['error' => $e->getMessage()],500);
         }
-
-        $tickets = $query->paginate(10);
 
 
         return new TicketCollection($tickets);
@@ -37,10 +41,14 @@ class TicketController extends Controller
 
     public function store(Request $request)
     {
-        $data = $request->all();
-        $data['requested_date'] = Carbon::parse($data['requested_date'])->toDateTimeString();
+        try{
+            $data = $request->all();
+            $data['requested_date'] = Carbon::parse($data['requested_date'])->toDateTimeString();
 
-        $ticket = Ticket::create($data);
+            $ticket = Ticket::create($data);
+        }catch(\Exceptions $e){
+            return response()->json(['error' => $e->getMessage()],500);
+        }
 
 
         return response()->json($ticket);
@@ -48,15 +56,20 @@ class TicketController extends Controller
 
     public function update(Request $request,$id)
     {
-        $ticket = Ticket::find($id);
+        try{
+            $ticket = Ticket::find($id);
 
-        if($ticket){
-            $ticket->status = $ticket->status == 'open' ? 'closed' : 'open';
-            $ticket->save();
-            return response()->json($ticket);
-        }else{
-            return response()->json(['error' => 'Ticket ID not found.'],500);
+            if($ticket){
+                $ticket->status = $ticket->status == 'open' ? 'closed' : 'open';
+                $ticket->save();
+                return response()->json($ticket);
+            }else{
+                return response()->json(['error' => 'Ticket ID not found.'],500);
+            }
+         }catch(\Exceptions $e){
+            return response()->json(['error' => $e->getMessage()],500);
         }
+
         return new TicketResource(Ticket::find($id));
     }
 
