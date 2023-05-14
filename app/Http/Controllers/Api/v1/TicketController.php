@@ -16,9 +16,9 @@ class TicketController extends Controller
     {
         $query = (new Ticket)->newQuery();
         $params = $request->all();
-        $search = $params['search'];
 
-        if($params['search']){
+        if(isset($params['search'])){
+            $search = $params['search'];
             $query->where('issue_headline', 'like',"%{$search}%")
                 ->orWhere('issue_description', 'like',"%{$search}%")
                 ->orWhere('requested_by', 'like',"%{$search}%");

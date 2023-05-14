@@ -22,7 +22,6 @@ Route::group(['prefix' => 'v1','namespace' => 'App\Http\Controllers\Api\V1', 'mi
     Route::apiResource('tickets',TicketController::class);
 });
 
-Route::group(['prefix' => 'internal/v1','namespace' => 'App\Http\Controllers\Api\V1', 'middleware' => 'auth'],function(){
-    Route::apiResource('tickets',TicketController::class);
-});
+Route::post('/v1/login', [App\Http\Controllers\Auth\AuthenticatedSessionController::class, 'getApiToken']);
+
 

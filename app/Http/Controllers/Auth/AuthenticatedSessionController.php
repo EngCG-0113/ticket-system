@@ -35,6 +35,23 @@ class AuthenticatedSessionController extends Controller
         setcookie('api-token',$token);
         return redirect()->intended(RouteServiceProvider::HOME);
     }
+    /**
+     * Handle an incoming authentication request.
+     */
+    public function getApiToken(LoginRequest $request)
+    {
+        $credential = $request->all();
+        
+        if(Auth::attempt($credential)){
+            $user = Auth::user();
+            $token = $user->createToken('api-token')->plainTextToken;
+            return response()->json(['token' => $token],200);
+        }else{
+            return response()->json(['error' => 'Crdential Error'],500);
+
+        }
+
+    }
 
     /**
      * Destroy an authenticated session.
